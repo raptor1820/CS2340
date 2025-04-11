@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'chatbot/base.html' %}
 
 {% block styles %}
 <style>
@@ -13,6 +13,7 @@
 
     .messages-list {
       padding-left: 0;
+      overflow-y: auto; 
     }
 
     .message {
@@ -99,6 +100,57 @@
     </div>
   </form>
 </div>
+
+<script>
+  const messageList = document.querySelector(".messages-list")
+  const messageInput = document.querySelector(".message-input")
+  const messageForm = document.querySelector(".message-form")
+
+  messageForm.addEventListener("submit", function(event) {
+    event.preventDefault()
+    const messageText = messageInput.value.trim()
+    if (messageText) {
+      addMessage(messageText, "sent")
+      messageInput.value = ""
+      sendMessageToServer(messageText)
+    }
+  })
+
+  function addMessage(text, type) {
+    const messageItem = document.createElement("li")
+    messageItem.classList.add("message", type)
+    text =  (type === "sent") ? text : marked.parse(text)
+    console.log(text)
+    messageItem.innerHTML = `
+      <div class="message-text">
+        <div class="message-sender">
+          <b>${type === "sent" ? "You" : "AI Chatbot"}</b>
+        </div>
+        <div class="message-content">${text}</div>
+      </div>
+    `
+    messageList.appendChild(messageItem)
+    messageList.scrollTop = messageList.scrollHeight
+  }
+
+  function sendMessageToServer(message) {
+    fetch('', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        'message': message
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.response) {
+        addMessage(data.response, "received")
+      }
+    })
+    .catch(error => console.error("Error:", error))
+  }
+</script>
 
 
 {% endblock %}
