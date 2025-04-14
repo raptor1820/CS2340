@@ -1,6 +1,8 @@
 from django.db import models
-from django.conf import settings
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class WorkoutCategory(models.Model):
     """Category for different types of workouts (e.g., Cardio, Strength, Flexibility)"""
@@ -32,7 +34,7 @@ class Workout(models.Model):
         ('V', 'Very High')
     ]
     
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='workouts')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='workouts')
     title = models.CharField(max_length=100)
     date = models.DateField(default=timezone.now)
     start_time = models.TimeField(default=timezone.now)
@@ -84,7 +86,7 @@ class WorkoutExercise(models.Model):
 
 class UserMetrics(models.Model):
     """User metrics to track progress"""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='metrics')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='metrics')
     date = models.DateField(default=timezone.now)
     weight = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # in kg/lbs
     body_fat = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)  # percentage

@@ -1,8 +1,10 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.utils import ErrorList
 from django.utils.safestring import mark_safe
-from django.contrib.auth.models import User
 from django import forms
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class CustomErrorList(ErrorList):
     def __str__(self):

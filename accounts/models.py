@@ -28,6 +28,8 @@ class FitUser(AbstractBaseUser, PermissionsMixin):
     totalWorkouts = models.PositiveIntegerField(null=True, blank=True)
     totalCalBurned = models.PositiveIntegerField(null=True, blank=True)
     workoutCountHistory = models.JSONField(default=list, blank=True)
+    calBurnedHistory = models.JSONField(default=list, blank=True)
+    sleepHistory = models.JSONField(default=list, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
