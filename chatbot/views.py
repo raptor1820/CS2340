@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from google import genai
+import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 
